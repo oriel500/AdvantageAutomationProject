@@ -9,7 +9,7 @@ from selenium.webdriver.common.action_chains import ActionChains
 class Advantage_ToolBar:
     def __init__(self, _driver: webdriver.Chrome):
         self.driver = _driver
-        self.wait = WebDriverWait(self.driver, 30)
+        self.wait = WebDriverWait(self.driver, 60)
         self.actions = ActionChains(self.driver)
 
     def logo_element(self):
@@ -31,7 +31,6 @@ class Advantage_ToolBar:
     def click_logo(self):
         self.wait.until(EC.visibility_of_element_located((By.CSS_SELECTOR, ".logo>a")))
         self.logo_element().click()
-        self.wait.until(EC.visibility_of_element_located((By.ID, "our_products")))
 
     # hovering with the mouse on cart icon
     def hover_cart(self):
@@ -43,8 +42,10 @@ class Advantage_ToolBar:
     def click_cart(self):
         self.wait.until(EC.visibility_of_element_located((By.ID, "menuCart")))
         self.cart_element().click()
-        self.wait.until(EC.visibility_of_element_located((By.ID, "shoppingCart")))
 
+    def click_user(self):
+        self.wait.until(EC.visibility_of_element_located((By.ID, "menuUser")))
+        self.user_element().click()
 
 # === Check if the class work ===
 # Setup
