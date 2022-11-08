@@ -38,11 +38,12 @@ class Advantage_ToolBar:
         self.actions.move_to_element(self.cart_element())
         self.actions.perform()
 
-    # click on the cart icon and navigate to cart page
+    # click on the cart icon in toolbar
     def click_cart(self):
         self.wait.until(EC.visibility_of_element_located((By.ID, "menuCart")))
         self.cart_element().click()
 
+    # click on the user icon in toolbar
     def click_user(self):
         self.wait.until(EC.visibility_of_element_located((By.ID, "menuUser")))
         self.user_element().click()
