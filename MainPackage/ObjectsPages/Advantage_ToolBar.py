@@ -56,22 +56,22 @@ class Advantage_ToolBar:
         self.driver.find_element(By.ID, "checkOutPopUp").click()
 
     # get the list of products in cart menu popup window
-    def cart_list_products(self):
+    def list_products(self):
         self.hover_cart()
         table = self.driver.find_element(By.CSS_SELECTOR, "div>table")
-        tr_list = table.find_elements(By.TAG_NAME, "tr")
+        tr_list = table.find_elements(By.CSS_SELECTOR, "tr#product")
         return tr_list
 
-    # get the product from the list of products in cart menu popup window
-    def cart_product_by_index(self, index):
+    # get list of td tags from the list of products in cart menu popup window
+    def get_product_by_index(self, index):
         self.hover_cart()
-        td_list = self.cart_list_products()[index].find_elements(By.TAG_NAME, "td")
+        td_list = self.list_products()[index].find_elements(By.TAG_NAME, "td")
         return td_list
 
     # get the name of product in cart menu popup window by index
     def get_name_product_by_index(self, index):
         # choose td from product
-        choose_td = self.cart_product_by_index(index)[1]
+        choose_td = self.get_product_by_index(index)[1]
         # get 'a' tag
         a_tag = choose_td.find_element(By.TAG_NAME, "a")
         # took from 'a' tag, h3 tag
@@ -81,7 +81,7 @@ class Advantage_ToolBar:
     # get the price of product in cart menu popup window by index
     def get_price_product_by_index(self, index):
         # choose td from product
-        choose_td = self.cart_product_by_index(index)[2]
+        choose_td = self.get_product_by_index(index)[2]
         # get the price text
         price_str = choose_td.find_element(By.TAG_NAME, "p").text[1:]
         price_str = price_str.replace(",", "")
@@ -91,7 +91,7 @@ class Advantage_ToolBar:
     # get the QTY of product in cart menu popup window by index
     def get_qty_product_by_index(self, index):
         # choose td from product
-        choose_td = self.cart_product_by_index(index)[1]
+        choose_td = self.get_product_by_index(index)[1]
         # get 'a' tag
         a_tag = choose_td.find_element(By.TAG_NAME, "a")
         # get labels tags
@@ -102,13 +102,20 @@ class Advantage_ToolBar:
     # get the color of product in cart menu popup window by index
     def get_color_product_by_index(self, index):
         # choose td from product
-        choose_td = self.cart_product_by_index(index)[1]
+        choose_td = self.get_product_by_index(index)[1]
         # get 'a' tag
         a_tag = choose_td.find_element(By.TAG_NAME, "a")
         # get labels tags
         label_tags = a_tag.find_elements(By.TAG_NAME, "label")
         # return the color
         return label_tags[1].find_element(By.TAG_NAME, "span").text
+
+    def remove_product_by_index(self, index):
+        # choose td from product
+        choose_td = self.get_product_by_index(index)[2]
+        # get the price text
+        x_button = choose_td.find_element(By.CSS_SELECTOR, ".closeDiv>div")
+        x_button.click()
 
     # click on the user icon in toolbar
     def click_user(self):
@@ -128,7 +135,9 @@ class Advantage_ToolBar:
 #
 # page.click_user()
 # sign_in_page.sign_in("test0001", "Aabc12")
-# print(page.get_price_product_by_index(0))
+# print(f"len: {len(page.list_products())}")
+# page.remove_product_by_index(0)
+# print(f"len: {len(page.list_products())}")
 # sleep(5)
 
 
