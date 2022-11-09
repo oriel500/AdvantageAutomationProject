@@ -5,6 +5,10 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.action_chains import ActionChains
 
+# from selenium.webdriver.chrome.service import Service
+# from time import sleep
+# from Advantage_SignInPopUp import Advantage_SignInPopUp
+
 
 class Advantage_ToolBar:
     def __init__(self, _driver: webdriver.Chrome):
@@ -79,9 +83,10 @@ class Advantage_ToolBar:
         # choose td from product
         choose_td = self.cart_product_by_index(index)[2]
         # get the price text
-        price_str = choose_td.find_element(By.TAG_NAME, "p").text
-        # return float price
-        return price_str
+        price_str = choose_td.find_element(By.TAG_NAME, "p").text[1:]
+        price_str = price_str.replace(",", "")
+        # change price_str to float
+        return float(price_str)
 
     # get the QTY of product in cart menu popup window by index
     def get_qty_product_by_index(self, index):
@@ -92,7 +97,7 @@ class Advantage_ToolBar:
         # get labels tags
         label_tags = a_tag.find_elements(By.TAG_NAME, "label")
         # return the price
-        return label_tags[0].text.split()[1]
+        return int(label_tags[0].text.split()[1])
 
     # get the color of product in cart menu popup window by index
     def get_color_product_by_index(self, index):
@@ -123,7 +128,7 @@ class Advantage_ToolBar:
 #
 # page.click_user()
 # sign_in_page.sign_in("test0001", "Aabc12")
-# print(page.get_price_product_by_index(1))
+# print(page.get_price_product_by_index(0))
 # sleep(5)
 
 
