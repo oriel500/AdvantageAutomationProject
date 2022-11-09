@@ -122,6 +122,11 @@ class Advantage_ToolBar:
         self.wait.until(EC.element_to_be_clickable((By.ID, "menuUser")))
         self.user_element().click()
 
+    # return the name of user next to user icon
+    def get_name_user_icon(self):
+        name = self.driver.find_element(By.CSS_SELECTOR, "#menuUserLink>span").text
+        return name
+
 
 # === Check if the class work ===
 # Setup

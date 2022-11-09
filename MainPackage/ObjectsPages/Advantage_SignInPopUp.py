@@ -10,6 +10,10 @@ class Advantage_SignInPopUp:
         self.driver = _driver
         self.wait = WebDriverWait(self.driver, 60)
 
+    # return the sign in popup window
+    def popup_window_element(self):
+        return self.driver.find_element(By.CSS_SELECTOR, ".login.ng-scope")
+
     def username_editbox(self):
         return self.driver.find_element(By.NAME, "username")
 
