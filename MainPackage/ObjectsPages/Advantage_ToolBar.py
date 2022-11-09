@@ -1,4 +1,4 @@
-# Toolbar in Advantage site
+# Toolbar object in Advantage site
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait

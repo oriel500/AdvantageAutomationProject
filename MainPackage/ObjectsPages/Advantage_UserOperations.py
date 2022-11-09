@@ -10,42 +10,6 @@ class Advantage_UserOperations:
         self.driver = _driver
         self.wait = WebDriverWait(self.driver, 60)
 
-    # ===Operations in CREATE ACCOUNT PAGE===
-    def username_editbox_register(self):
-        return self.driver.find_element(By.NAME, "usernameRegisterPage")
-
-    def email_editbox_register(self):
-        return self.driver.find_element(By.NAME, "emailRegisterPage")
-
-    def password_editbox_register(self):
-        return self.driver.find_element(By.NAME, "passwordRegisterPage")
-
-    def confirm_password_editbox_register(self):
-        return self.driver.find_element(By.NAME, "confirm_passwordRegisterPage")
-
-    def agree_checkbox(self):
-        return self.driver.find_element(By.CSS_SELECTOR, "input[name='i_agree']")
-
-    def register_button(self):
-        return self.driver.find_element(By.ID, "register_btnundefined")
-
-    # Fill the fields in page CREATE ACCOUNT and register
-    def register(self, username, email, password):
-        # wait to title create account in page appear
-        self.wait.until(EC.text_to_be_present_in_element((By.CSS_SELECTOR, "article>h3"), "CREATE ACCOUNT"))
-        self.username_editbox_register().send_keys(username)  # fill username
-        self.email_editbox_register().send_keys(email)  # fill email
-        self.password_editbox_register().send_keys(password)  # fill password
-        self.confirm_password_editbox_register().send_keys(password)  # fill confirm password
-        self.wait.until(EC.element_to_be_clickable((By.CSS_SELECTOR, "input[name='i_agree']")))
-        # check the "i_agree" checkbox
-        self.driver.execute_script("arguments[0].click();", self.agree_checkbox())
-        # wait register button to clickable
-        self.wait.until(EC.element_to_be_clickable((By.XPATH, "//*[text()='REGISTER']")))
-        self.register_button().click()
-        # wait to main page open
-        self.wait.until(EC.visibility_of_element_located((By.ID, "our_products")))
-
     # ===Operations in POPUP SIGN IN===
     def username_editbox_sign_in(self):
         return self.driver.find_element(By.NAME, "username")
