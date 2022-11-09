@@ -29,7 +29,7 @@ class Advantage_ToolBar:
 
     # click on the logo of the site and navigate to main page
     def click_logo(self):
-        self.wait.until(EC.visibility_of_element_located((By.CSS_SELECTOR, ".logo>a")))
+        self.wait.until(EC.element_to_be_clickable((By.CSS_SELECTOR, ".logo>a")))
         self.logo_element().click()
 
     # hovering with the mouse on cart icon
@@ -40,12 +40,12 @@ class Advantage_ToolBar:
 
     # click on the cart icon in toolbar
     def click_cart(self):
-        self.wait.until(EC.visibility_of_element_located((By.ID, "menuCart")))
+        self.wait.until(EC.element_to_be_clickable((By.ID, "menuCart")))
         self.cart_element().click()
 
     # click on the user icon in toolbar
     def click_user(self):
-        self.wait.until(EC.visibility_of_element_located((By.ID, "menuUser")))
+        self.wait.until(EC.element_to_be_clickable((By.ID, "menuUser")))
         self.user_element().click()
 
 # === Check if the class work ===
