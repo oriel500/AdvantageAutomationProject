@@ -43,7 +43,9 @@ class Advantage_AccountOperationsMenu:
         self.driver.find_element(By.XPATH, "//*[text()='Delete Account']").click()
         # wait until 'Are you sure' window located
         self.wait.until(EC.visibility_of_element_located((By.ID, "deleteAccountPopup")))
-        self.driver.execute_script("arguments[0].click();", self.green_button())
+        self.driver.execute_script("arguments[0].click();", self.red_button())
+        # wait to main page open
+        self.wait.until(EC.visibility_of_element_located((By.ID, "our_products")))
 
     def red_button(self):
         return self.driver.find_element(By.CSS_SELECTOR, ".deletePopupBtn.deleteRed")

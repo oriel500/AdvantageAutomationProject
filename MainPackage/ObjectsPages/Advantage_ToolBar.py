@@ -54,12 +54,15 @@ class Advantage_ToolBar:
     # get the list of products in cart menu popup window
     def cart_list_products(self):
         self.hover_cart()
-        return self.driver.find_elements(By.CSS_SELECTOR, "div>table")
+        table = self.driver.find_element(By.CSS_SELECTOR, "div>table")
+        tr_list = table.find_elements(By.TAG_NAME, "tr")
+        return tr_list
 
     # get the product from the list of products in cart menu popup window
     def cart_product_by_index(self, index):
         self.hover_cart()
-        return self.cart_list_products()[index].find_elements(By.TAG_NAME, "td")
+        td_list = self.cart_list_products()[index].find_elements(By.TAG_NAME, "td")
+        return td_list
 
     # get the name of product in cart menu popup window by index
     def get_name_product_by_index(self, index):
@@ -120,8 +123,7 @@ class Advantage_ToolBar:
 #
 # page.click_user()
 # sign_in_page.sign_in("test0001", "Aabc12")
-# print(page.get_color_product_by_index(0))
-# page.click_cart_checkout_popup()
+# print(page.get_price_product_by_index(1))
 # sleep(5)
 
 
