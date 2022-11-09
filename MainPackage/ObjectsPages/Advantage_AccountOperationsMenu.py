@@ -33,3 +33,38 @@ class Advantage_AccountOperationsMenu:
     # click to my orders in operations
     def click_my_orders(self):
         self.click_operation(1)
+
+    # delete account when the account operations menu open
+    def delete_account(self):
+        self.click_my_account()
+        # wait until my account page appear
+        self.wait.until(EC.visibility_of_element_located((By.XPATH, "//*[text()='MY ACCOUNT']")))
+        # click delete button
+        self.driver.find_element(By.XPATH, "//*[text()='Delete Account']").click()
+        # wait until 'Are you sure' window located
+        self.wait.until(EC.visibility_of_element_located((By.ID, "deleteAccountPopup")))
+        self.driver.execute_script("arguments[0].click();", self.green_button())
+
+    def red_button(self):
+        return self.driver.find_element(By.CSS_SELECTOR, ".deletePopupBtn.deleteRed")
+
+    def green_button(self):
+        return self.driver.find_element(By.CSS_SELECTOR, ".deletePopupBtn.deleteGreen")
+
+
+# === Check if the class work ===
+# Setup
+# service = Service(r"C:\seleniumQA7\chromedriver.exe")
+# driver_chrome = webdriver.Chrome(service=service)
+# driver_chrome.get("https://advantageonlineshopping.com/#/")
+# driver_chrome.implicitly_wait(30)
+# driver_chrome.maximize_window()
+# toolbar = Advantage_ToolBar(driver_chrome)
+# this_page = Advantage_AccountOperationsMenu(driver_chrome)
+# sign_in_page = Advantage_SignInPopUp(driver_chrome)
+#
+# toolbar.click_user()
+# sign_in_page.sign_in("test0001", "Aabc12")
+# toolbar.click_user()
+# this_page.delete_account()
+# sleep(10)

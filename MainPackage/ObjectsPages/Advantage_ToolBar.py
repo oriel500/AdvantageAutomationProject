@@ -75,6 +75,7 @@ class Advantage_ToolBar:
     def get_price_product_by_index(self, index):
         # choose td from product
         choose_td = self.cart_product_by_index(index)[2]
+        # get the price text
         price_str = choose_td.find_element(By.TAG_NAME, "p").text
         # return float price
         return price_str
