@@ -5,11 +5,12 @@ from selenium.webdriver.common.action_chains import ActionChains
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 
+
 class Advantage_ProductPage:
     def __init__(self, driver: webdriver.Chrome):
         self.driver = driver
         self.actions = ActionChains(self.driver)
-        self.wait = WebDriverWait(self.driver, 60)
+        self.wait = WebDriverWait(self.driver, 30)
 
     # Back from a tablet product page to 'Tablets' category page
     def tablets_category_element(self):
@@ -18,15 +19,19 @@ class Advantage_ProductPage:
     def back_to_tablets_category(self):
         self.driver.find_element(By.LINK_TEXT, 'TABLETS').click()
 
-    # Product price element
+    # Get product price
     def get_price(self):
-        return self.driver.find_element(By.CSS_SELECTOR, '[class="roboto-thin screen768 ng-binding"]').text
+        price = self.driver.find_element(By.CSS_SELECTOR, '[class="roboto-thin screen768 ng-binding"]').text
+        price_str = price[1:]
+        price_str = price_str.replace(",", "")
+        return float(price_str)
 
     # A method that selects the quantity of the product
     def quantity_element(self):
         return self.driver.find_element(By.CSS_SELECTOR, 'input[name="quantity"]')
 
     def select_quantity(self, num: int):
+        self.wait.until(EC.element_to_be_clickable((By.CSS_SELECTOR, 'input[name="quantity"]')))
         if num == 1:
             pass
         else:
