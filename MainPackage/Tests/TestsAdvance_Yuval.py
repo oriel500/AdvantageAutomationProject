@@ -37,16 +37,19 @@ class TestAdvantage(TestCase):
         self.signin = Advantage_SignInPopUp(self.driver)
 
     def test1_quantity_in_popup_cart(self):
+        # List of category names
         cat_list = ['Headphones', 'Mice']
+
         product_index = 0
         qty = 2
+
         # Add two different products with different qty
         for i in cat_list:
-            self.main.select_category(i)
-            self.category.select_product(product_index)
-            self.product.select_quantity(qty)
-            self.product.add_to_cart()
-            self.toolbar.click_logo()
+            self.main.select_category(i)                            # Select category by name (cat_list)
+            self.category.select_product(product_index)             # Select product by product index (product_index)
+            self.product.select_quantity(qty)                       # Select quantity of product (qty)
+            self.product.add_to_cart()                              # Add product to cart
+            self.toolbar.click_logo()                               # Click Advantage logo to return to main page
             product_index += 1
             qty += 1
 
@@ -60,33 +63,10 @@ class TestAdvantage(TestCase):
         print(sum_qty)
         self.assertEqual(sum_qty, 5)
 
-    def test2_products_in_popup(self):
-        # Add three different products with different qty
-        cat_list = ['Headphones', 'Mice', 'Tablets']
-        qty = 1
-        for i in cat_list:
-            self.main.select_category(i)
-            self.category.select_product(0)
-            self.product.select_quantity(qty)
-            self.product.add_to_cart()
-            self.toolbar.click_logo()
-            qty += 1
-
-        # Check names validity
-        self.toolbar.get_name_product_by_index()
-
-        # Check colors validity
-        self.toolbar.get_color_product_by_index()
-
-        # Check qty of products validity
-        self.toolbar.get_qty_product_by_index()
-
-        # Check price of products validity
-        self.toolbar.get_price_product_by_index()
-
     def test3_remove_product_in_popup(self):
         cat_list = ['Laptops', 'Mice', 'Headphones']
         qty = 1
+
         # Add different products to cart
         for i in cat_list:
             self.main.select_category(i)
@@ -102,38 +82,54 @@ class TestAdvantage(TestCase):
 
         # List of new cart list
         self.assertNotEqual(len(self.toolbar.list_products()), 3)
-        print(f'Number of products in cart after removing is: {len(self.toolbar.list_products())}')
+        print(f'Number of products in cart after remove is: {len(self.toolbar.list_products())}')
 
     def test4_shopping_cart_page(self):
         self.main.select_category('Laptops')
         self.category.select_product(0)
         self.product.select_quantity(3)
         self.product.add_to_cart()
-        self.toolbar.click_cart()
-        self.assertTrue(self.cart.shopping_cart_title_element())
 
-    def test5_price_sum(self):
-        # Add prices sum when choosing to list
-        shopping_cart = []
+        self.toolbar.click_cart()           # Go to shopping cart page
+
+        self.assertEqual(self.cart.shopping_cart_title_element().text, 'SHOPPING CART')
+
+    def test5_products_prices_sum(self):
+        # List of prices of the products (*qty)
         prices_list = []
+
+        # List of names of the products
+        product_names = []
+
+        # List of qty
+        qty_list = []
 
         cat_list = ['Laptops', 'Speakers', 'Headphones']
         qty = 1
         product_index = 0
+
         # Add different products with different qty to cart
         for i in cat_list:
             self.main.select_category(i)
             self.category.select_product(product_index)
             self.product.select_quantity(qty)
             self.product.add_to_cart()
+            qty_list.append(qty)
+            prices_list.append(self.product.get_price()*qty)
+            product_names.append(self.category.select_product(product_index).text)
             qty += 1
             product_index += 1
-            shopping_cart.append(self.product.product_name_element())
-            prices_list.append(self.product.get_price()*qty)
+            self.toolbar.click_logo()
 
+        self.toolbar.click_cart()               # Go to shopping cart page
+        print(f'Name: {product_names[0]}, Qty: {qty_list[0]}, Price: {prices_list[0]}')
+        print("----------")
+        print(f'Name: {product_names[1]}, Qty: {qty_list[1]}, Price: {prices_list[1]}')
+        print("----------")
+        print(f'Name: {product_names[2]}, Qty: {qty_list[2]}, Price: {prices_list[2]}')
+        print("----------")
+        print(f'Total price is: {sum(prices_list)}')
         self.assertEqual(sum(prices_list), self.cart.total_price())
-        print(shopping_cart)
-        print(sum(prices_list))
 
     def test6_edit_qty_of_products(self):
         cat_list = ['Laptops', 'Mice', 'Headphones']
@@ -148,15 +144,3 @@ class TestAdvantage(TestCase):
         # edit
         # self.product.select_quantity(qty+)
         # AssertEqual Quantity of products to qty
-
-    def test7_tablets_reverse(self):
-        self.main.select_category('Tablets')
-        self.category.select_product(0)
-        self.product.back_to_tablets_category()
-        self.assertEqual(self.category.category_title(), "TABLETS")
-
-        self.category.back_to_main_page()
-        # self.assertEqual()
-
-    def test8(self):
-        pass
