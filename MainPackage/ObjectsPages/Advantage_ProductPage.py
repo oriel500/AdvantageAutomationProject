@@ -19,6 +19,10 @@ class Advantage_ProductPage:
     def back_to_tablets_category(self):
         self.driver.find_element(By.LINK_TEXT, 'TABLETS').click()
 
+    # Get product name
+    def product_name_element(self):
+        return self.driver.find_element(By.CSS_SELECTOR, 'class="roboto-regular ng-binding"')
+
     # Get product price
     def get_price(self):
         price = self.driver.find_element(By.CSS_SELECTOR, '[class="roboto-thin screen768 ng-binding"]').text
