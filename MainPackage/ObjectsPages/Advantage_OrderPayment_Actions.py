@@ -133,6 +133,13 @@ class Advantage_OrderPayment_Actions:
         order_id = order_cols[0].find_element(By.TAG_NAME, "label").text
         return order_id
 
+    def regstration_button(self):
+        return self.driver.find_element(By.ID, "registration_btnundefined")
+
+    def registration_click(self):
+        self.wait.until(EC.element_to_be_clickable((By.ID, "registration_btnundefined")))
+        self.regstration_button().click()
+
 
 # === Check if the class work ===
 # Setup
