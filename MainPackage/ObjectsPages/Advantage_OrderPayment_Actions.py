@@ -6,19 +6,17 @@ from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.select import Select
 from selenium.webdriver.common.action_chains import ActionChains
 
-from selenium.webdriver.chrome.service import Service
-from time import sleep
-from Advantage_SignInPopUp import Advantage_SignInPopUp
-from Advantage_ToolBar import Advantage_ToolBar
-from Advantage_AccountOperationsMenu import Advantage_AccountOperationsMenu
-from selenium.webdriver.common.keys import Keys
+# from selenium.webdriver.chrome.service import Service
+# from time import sleep
+# from Advantage_SignInPopUp import Advantage_SignInPopUp
+# from Advantage_ToolBar import Advantage_ToolBar
+# from Advantage_AccountOperationsMenu import Advantage_AccountOperationsMenu
 
 class Advantage_OrderPayment_Actions:
     def __init__(self, _driver: webdriver.Chrome):
         self.driver = _driver
         self.wait = WebDriverWait(self.driver, 60)
         self.actions = ActionChains(self.driver)
-        self.keys = Keys()
 
     # username from order payment page
     def username_editbox(self):
