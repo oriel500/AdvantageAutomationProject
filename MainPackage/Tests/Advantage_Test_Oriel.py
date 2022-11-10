@@ -147,7 +147,6 @@ class TestCalcPage(TestCase):
         # delete new user
         self.toolbar.click_user()
         self.account_menu.delete_account()
-        sleep(3)
 
     def test9_order_by_master_with_exist_user(self):
         pass
