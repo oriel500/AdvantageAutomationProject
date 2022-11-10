@@ -14,6 +14,7 @@ from MainPackage.ObjectsPages.Advantage_ToolBar import Advantage_ToolBar
 # delete in done
 from time import sleep
 
+
 class TestCalcPage(TestCase):
     def setUp(self):
         service_chrome = Service(r"C:\selenium1\chromedriver.exe")
@@ -43,7 +44,7 @@ class TestCalcPage(TestCase):
         product_index_list = [0, 1, 2]
         qty_list = [3, 2, 1]
 
-        for i in range(3):
+        for i in range(len(product_index_list)):
             # enter to product
             self.main_page.select_category(category_list[i])
             self.category_page.select_product(product_index_list[i])
@@ -71,7 +72,7 @@ class TestCalcPage(TestCase):
             self.assertEqual(qty_product_page, qty_toolbar)
             self.assertEqual(price_product_page, price_toolbar)
 
-    def test7_check_navigate_backword(self):
+    def test7_check_navigate_backward(self):
         # enter to product
         self.main_page.select_category('Tablets')
         self.category_page.select_product(0)
@@ -85,11 +86,68 @@ class TestCalcPage(TestCase):
         # click in navigation line on home
         self.category_page.back_to_main_page()
 
-        # check if the function to locate mice element work
+        # check if the function success to locate mice element
         self.assertTrue(self.main_page.mice_element())
 
-    def test_8_order_by_safepay_with_new_user(self):
-        pass
+    def test8_order_by_safepay_with_new_user(self):
+        # create new user and logout
+        username = "test0002"
+        password = "Aabc12"
+        email = "a@gmail.com"
+        self.toolbar.click_user()
+        self.signin_page.click_create_account()
+        self.create_account_page.register(username, email, password)
+        sleep(2)  # put sleep because after register the icon user take time to reload
+        self.toolbar.click_user()
+        self.account_menu.logout()
+
+        # lists for data to pick a products
+        category_list = ['Speakers', 'Mice']
+        product_index_list = [1, -1]
+        qty_list = [5, 2]
+
+        # add to cart products
+        for i in range(len(product_index_list)):
+            # enter to product
+            self.main_page.select_category(category_list[i])
+            self.category_page.select_product(product_index_list[i])
+
+            # add to cart
+            self.product_page.select_quantity(qty_list[i])
+            self.product_page.add_to_cart()
+            self.toolbar.click_logo()
+
+        # navigate to checkout
+        self.toolbar.click_cart_checkout_popup()
+
+        # login to new user
+        self.order_actions.login_from_order_payment(username, password)
+
+        # pay by safepay
+        self.order_actions.click_next()
+        self.order_actions.pay_now_by_safepay(username, password)
+        # check if the function success to locate order number element
+        self.assertTrue(self.order_actions.order_number_from_thankYou_page())
+        # save the order number from thank you page
+        order_id_from_thank_you_page = self.order_actions.order_number_from_thankYou_page()
+
+        # check if the cart empty
+        self.toolbar.click_cart()
+        self.assertTrue(self.cart_page.is_empty())
+
+        # navigate to my orders page
+        self.toolbar.click_user()
+        self.account_menu.click_my_orders()
+        # save the order number from my orders page
+        order_id_from_orders_page = self.order_actions.get_id_last_order()
+
+        # check if the order number from thank you page equal to order number from my orders page
+        self.assertEqual(order_id_from_thank_you_page, order_id_from_orders_page)
+
+        # delete new user
+        self.toolbar.click_user()
+        self.account_menu.delete_account()
+        sleep(3)
 
     def test9_order_by_master_with_exist_user(self):
         pass

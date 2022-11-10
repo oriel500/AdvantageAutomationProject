@@ -130,13 +130,13 @@ class Advantage_OrderPayment_Actions:
     # tracking number from thank you page
     def tracking_number_from_thankYou_page(self):
         # wait until locate the text "Thank you..."
-        self.wait.until(EC.visibility_of_element_located((By.CSS_SELECTOR, "h2>span")))
+        self.wait.until(EC.visibility_of_element_located((By.ID, "trackingNumberLabel")))
         return self.driver.find_element(By.ID, "trackingNumberLabel").text
 
     # order number from thank you page
     def order_number_from_thankYou_page(self):
         # wait until locate the text "Thank you..."
-        self.wait.until(EC.visibility_of_element_located((By.CSS_SELECTOR, "h2>span")))
+        self.wait.until(EC.visibility_of_element_located((By.ID, "orderNumberLabel")))
         return self.driver.find_element(By.ID, "orderNumberLabel").text
 
     def get_orders_table(self):

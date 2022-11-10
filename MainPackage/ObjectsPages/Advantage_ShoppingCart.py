@@ -64,7 +64,7 @@ class Advantage_ShoppingCart:
         self.driver.execute_script("arguments[0].click();", a_list[0])
 
     # A method that checks if that shopping cart is empty
-    def shopping_cart_empty(self):
+    def is_empty(self):
         if len(self.products_list()) == 0:
             return True
         else:
