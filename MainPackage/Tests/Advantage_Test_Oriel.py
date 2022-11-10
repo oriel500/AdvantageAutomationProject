@@ -88,6 +88,20 @@ class TestCalcPage(TestCase):
         # check if the function to locate mice element work
         self.assertTrue(self.main_page.mice_element())
 
-    def test_8_order_by_safepay(self):
+    def test_8_order_by_safepay_with_new_user(self):
         pass
 
+    def test9_order_by_master_with_exist_user(self):
+        pass
+
+    def test10_login_logout(self):
+        username = "test0001"
+        password = "Aabc12"
+
+        self.toolbar.click_user()
+        self.signin_page.sign_in(username, password)
+        self.assertEqual(self.toolbar.get_name_user_icon(), username)
+
+        self.toolbar.click_user()
+        self.account_menu.logout()
+        self.assertEqual(self.toolbar.get_name_user_icon(), "")
