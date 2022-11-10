@@ -3,6 +3,8 @@ from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
+from selenium.webdriver.support.select import Select
+from selenium.webdriver.common.action_chains import ActionChains
 
 # from selenium.webdriver.chrome.service import Service
 # from time import sleep
@@ -14,6 +16,7 @@ class Advantage_OrderPayment_Actions:
     def __init__(self, _driver: webdriver.Chrome):
         self.driver = _driver
         self.wait = WebDriverWait(self.driver, 60)
+        self.actions = ActionChains(self.driver)
 
     # username from order payment page
     def username_editbox(self):
@@ -64,8 +67,12 @@ class Advantage_OrderPayment_Actions:
     def pay_now_button(self):
         return self.driver.find_element(By.ID, "pay_now_btn_SAFEPAY")
 
-    def click_pay_now(self):
+    def click_pay_now_safepay(self):
         self.wait.until(EC.element_to_be_clickable((By.ID, "pay_now_btn_SAFEPAY")))
+        self.pay_now_button().click()
+
+    def click_pay_now_master(self):
+        self.wait.until(EC.element_to_be_clickable((By.ID, "pay_now_btn_ManualPayment")))
         self.pay_now_button().click()
 
     # pay now by safepay method with username and password
@@ -75,7 +82,41 @@ class Advantage_OrderPayment_Actions:
         self.safepay_password_editbox().clear()
         self.safepay_username_editbox().send_keys(username)
         self.safepay_password_editbox().send_keys(password)
-        self.click_pay_now()
+        self.click_pay_now_safepay()
+
+    def master_card_number_editbox(self):
+        return self.driver.find_element(By.ID, "creditCard")
+
+    def master_cvv_editbox(self):
+        return self.driver.find_element(By.NAME, "cvv_number")
+
+    def master_cardholder_editbox(self):
+        return self.driver.find_element(By.NAME, "cardholder_name")
+
+    def month_select(self, mm: str):
+        select = Select(self.driver.find_element(By.CSS_SELECTOR, "select[name='mmListbox']"))
+        select.select_by_value(mm)
+
+    def year_select(self, yyyy: str):
+        select = Select(self.driver.find_element(By.CSS_SELECTOR, "select[name='yyyyListbox']"))
+        select.select_by_value(yyyy)
+
+    # pay now by master credit method
+    # ======need to fix!!!!!!!!
+    def pay_now_by_master_credit(self, card_number, cvv, cardholder, mm, yyyy):
+        # click master credit
+        self.click_master_credit()
+        # scroll down
+        self.actions.scroll_to_element(self.master_card_number_editbox())
+        # type card number
+        self.master_card_number_editbox().send_keys(card_number)
+        # type cvv
+        self.master_cvv_editbox().send_keys("0"+cvv)
+        # type cardholder
+        self.master_cardholder_editbox().send_keys(cardholder)
+        self.month_select(yyyy)
+        self.year_select(yyyy)
+        self.click_pay_now_master()
 
     # string from thank you page
     def thank_you_text(self):
@@ -133,6 +174,13 @@ class Advantage_OrderPayment_Actions:
         order_id = order_cols[0].find_element(By.TAG_NAME, "label").text
         return order_id
 
+    def regstration_button(self):
+        return self.driver.find_element(By.ID, "registration_btnundefined")
+
+    def registration_click(self):
+        self.wait.until(EC.element_to_be_clickable((By.ID, "registration_btnundefined")))
+        self.regstration_button().click()
+
 
 # === Check if the class work ===
 # Setup
@@ -154,6 +202,8 @@ class Advantage_OrderPayment_Actions:
 # sleep(2)
 # orders_actions.click_master_credit()
 # sleep(2)
+# orders_actions.pay_now_by_master_credit("123412341234", "123", "Oriel Naim", "01", "2026")
+# sleep(10)
 # orders_actions.pay_now_by_safepay("Test0001", "Aabc12")
 # print(orders_actions.order_number_from_thankYou_page())
 # toolbar.click_user()
