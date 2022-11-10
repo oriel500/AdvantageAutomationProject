@@ -21,21 +21,26 @@ class Advantage_ProductPage:
 
     # Get product name
     def product_name_element(self):
-        return self.driver.find_element(By.CSS_SELECTOR, 'class="roboto-regular ng-binding"')
+        name = self.driver.find_element(By.CSS_SELECTOR, '#Description>h1').text
+        # if the name above 26 letters the name change to name[0:27]
+        if len(name) > 27:
+            new_name = name[:27]
+            return new_name
+        return name
 
     # Get product price
     def get_price(self):
-        price = self.driver.find_element(By.CSS_SELECTOR, '[class="roboto-thin screen768 ng-binding"]').text
-        price_str = price[1:]
-        price_str = price_str.replace(",", "")
-        return float(price_str)
+        price_non_space = self.driver.find_element(By.CSS_SELECTOR, '#Description>h2').text.replace(" ", "")
+        price_str = price_non_space[1:].replace(",", "")
+        price = float(price_str)
+        return price
 
     # A method that selects the quantity of the product
     def quantity_element(self):
         return self.driver.find_element(By.CSS_SELECTOR, 'input[name="quantity"]')
 
     def select_quantity(self, num: int):
-        self.wait.until(EC.element_to_be_clickable((By.CSS_SELECTOR, 'input[name="quantity"]')))
+        self.wait.until(EC.element_to_be_clickable((By.CSS_SELECTOR, '[class="plus"]')))
         if num == 1:
             pass
         else:

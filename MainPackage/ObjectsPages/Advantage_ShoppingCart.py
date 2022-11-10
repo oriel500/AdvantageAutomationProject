@@ -36,7 +36,11 @@ class Advantage_ShoppingCart:
 
     def product_name_by_rowIndex(self, index):
         cols = self.get_columns_by_rowIndex(index)
-        return cols[1].find_element(By.TAG_NAME, "label").text
+        name = cols[1].find_element(By.TAG_NAME, "label").text
+        if len(name) > 27:
+            new_name = name[:27]
+            return new_name
+        return name
 
     def product_color_by_rowIndex(self, index):
         cols = self.get_columns_by_rowIndex(index)

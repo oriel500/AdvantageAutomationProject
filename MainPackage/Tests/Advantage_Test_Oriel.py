@@ -36,5 +36,7 @@ class TestCalcPage(TestCase):
         self.signin_page = Advantage_SignInPopUp(self.driver)
         self.toolbar = Advantage_ToolBar(self.driver)
 
-    def test(self):
-        pass
+    def test2_products_cart_popup(self):
+        self.toolbar.click_user()
+        self.signin_page.sign_in("test0001", "Aabc12")
+        print(self.toolbar.get_name_product_by_index(0))

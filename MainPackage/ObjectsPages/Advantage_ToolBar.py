@@ -58,6 +58,7 @@ class Advantage_ToolBar:
     # get the list of products in cart menu popup window
     def list_products(self):
         self.hover_cart()
+        self.wait.until(EC.visibility_of_element_located((By.CSS_SELECTOR, "div>table")))
         table = self.driver.find_element(By.CSS_SELECTOR, "div>table")
         tr_list = table.find_elements(By.CSS_SELECTOR, "tr#product")
         return tr_list
@@ -76,6 +77,10 @@ class Advantage_ToolBar:
         a_tag = choose_td.find_element(By.TAG_NAME, "a")
         # took from 'a' tag, h3 tag
         name = a_tag.find_element(By.TAG_NAME, "h3").text
+        # if the name above 26 letters the name change to name[0:27]
+        if len(name) > 27:
+            new_name = name[:27]
+            return new_name
         return name
 
     # get the price of product in cart menu popup window by index
