@@ -6,17 +6,19 @@ from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.select import Select
 from selenium.webdriver.common.action_chains import ActionChains
 
-# from selenium.webdriver.chrome.service import Service
-# from time import sleep
-# from Advantage_SignInPopUp import Advantage_SignInPopUp
-# from Advantage_ToolBar import Advantage_ToolBar
-# from Advantage_AccountOperationsMenu import Advantage_AccountOperationsMenu
+from selenium.webdriver.chrome.service import Service
+from time import sleep
+from Advantage_SignInPopUp import Advantage_SignInPopUp
+from Advantage_ToolBar import Advantage_ToolBar
+from Advantage_AccountOperationsMenu import Advantage_AccountOperationsMenu
+from selenium.webdriver.common.keys import Keys
 
 class Advantage_OrderPayment_Actions:
     def __init__(self, _driver: webdriver.Chrome):
         self.driver = _driver
         self.wait = WebDriverWait(self.driver, 60)
         self.actions = ActionChains(self.driver)
+        self.keys = Keys()
 
     # username from order payment page
     def username_editbox(self):
@@ -64,16 +66,20 @@ class Advantage_OrderPayment_Actions:
     def safepay_password_editbox(self):
         return self.driver.find_element(By.CSS_SELECTOR, "input[name='safepay_password']")
 
-    def pay_now_button(self):
-        return self.driver.find_element(By.ID, "pay_now_btn_SAFEPAY")
+    def safepay_pay_now_button(self):
+        return self.driver.find_element(By.CSS_SELECTOR, "button#pay_now_btn_SAFEPAY")
+
+    def master_pay_now_button(self):
+        return self.driver.find_element(By.ID, "pay_now_btn_ManualPayment")
 
     def click_pay_now_safepay(self):
-        self.wait.until(EC.element_to_be_clickable((By.ID, "pay_now_btn_SAFEPAY")))
-        self.pay_now_button().click()
+        self.wait.until(EC.element_to_be_clickable((By.CSS_SELECTOR, "button#pay_now_btn_SAFEPAY")))
+        self.driver.execute_script("arguments[0].click();", self.safepay_pay_now_button())
 
     def click_pay_now_master(self):
         self.wait.until(EC.element_to_be_clickable((By.ID, "pay_now_btn_ManualPayment")))
-        self.pay_now_button().click()
+        self.driver.execute_script("arguments[0].click();", self.master_pay_now_button())
+
 
     # pay now by safepay method with username and password
     def pay_now_by_safepay(self, username, password):
@@ -102,7 +108,6 @@ class Advantage_OrderPayment_Actions:
         select.select_by_value(yyyy)
 
     # pay now by master credit method
-    # ======need to fix!!!!!!!!
     def pay_now_by_master_credit(self, card_number, cvv, cardholder, mm, yyyy):
         # click master credit
         self.click_master_credit()
@@ -200,10 +205,14 @@ class Advantage_OrderPayment_Actions:
 # sleep(1)
 # orders_actions.click_next()
 # sleep(2)
+
+# master carf
 # orders_actions.click_master_credit()
 # sleep(2)
 # orders_actions.pay_now_by_master_credit("123412341234", "123", "Oriel Naim", "01", "2026")
 # sleep(10)
+
+# safepay check
 # orders_actions.pay_now_by_safepay("Test0001", "Aabc12")
 # print(orders_actions.order_number_from_thankYou_page())
 # toolbar.click_user()
