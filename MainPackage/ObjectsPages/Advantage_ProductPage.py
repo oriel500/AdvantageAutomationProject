@@ -57,6 +57,11 @@ class Advantage_ProductPage:
         self.driver.find_element(By.CSS_SELECTOR, '[name="save_to_cart"]').click()
 
     # A method that selects the product color
-    def choose_color(self):
-        list1 = self.driver.find_elements(By.TAG_NAME, 'span')
-        return list1[0].get_attribute('title')
+    def choose_first_color(self):
+        table = self.driver.find_element(By.CSS_SELECTOR, "#Description>div#productProperties")
+        div_list = table.find_elements(By.TAG_NAME, "div")
+        color_row = div_list[0]
+        list_div_in_color_row = color_row.find_elements(By.TAG_NAME, "div")
+        list_colors = list_div_in_color_row[0].find_elements(By.TAG_NAME,"span")
+        color = list_colors[0].get_attribute("title")
+        return color
