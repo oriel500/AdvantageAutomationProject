@@ -22,7 +22,8 @@ class Advantage_ProductPage:
     # Get product name
     def product_name_element(self):
         name = self.driver.find_element(By.CSS_SELECTOR, '#Description>h1').text
-        # if the name above 26 letters the name change to name[0:27]
+        # if the name above 27 letterers include spaces return name with only 27 letters
+        # because in the cart menu popup the name of product can be included only 27 letters
         if len(name) > 27:
             new_name = name[:27]
             return new_name
@@ -39,7 +40,9 @@ class Advantage_ProductPage:
     def quantity_element(self):
         return self.driver.find_element(By.CSS_SELECTOR, 'input[name="quantity"]')
 
+    # change quantity in product page
     def select_quantity(self, num: int):
+        # wait until the plus button in product page clickable
         self.wait.until(EC.element_to_be_clickable((By.CSS_SELECTOR, '[class="plus"]')))
         if num == 1:
             pass
@@ -49,19 +52,25 @@ class Advantage_ProductPage:
                 self.actions.click(self.driver.find_element(By.CSS_SELECTOR, '[class="plus"]'))
                 self.actions.perform()
 
-    # A method that add the product to the cart
     def add_to_cart_element(self):
         return self.driver.find_element(By.CSS_SELECTOR, '[name="save_to_cart"]')
 
+    # A method that add product to the cart
     def add_to_cart(self):
         self.driver.find_element(By.CSS_SELECTOR, '[name="save_to_cart"]').click()
 
-    # A method that selects the product color
+    # A method that select the first color in product page
     def choose_first_color(self):
+        # get the Description table of product
         table = self.driver.find_element(By.CSS_SELECTOR, "#Description>div#productProperties")
+        # get the list of div tags in the table
         div_list = table.find_elements(By.TAG_NAME, "div")
+        # get the row of colors
         color_row = div_list[0]
+        # get the list of divs tage in the row of colors
         list_div_in_color_row = color_row.find_elements(By.TAG_NAME, "div")
-        list_colors = list_div_in_color_row[0].find_elements(By.TAG_NAME,"span")
+        # get the list of colors
+        list_colors = list_div_in_color_row[0].find_elements(By.TAG_NAME, "span")
+        # get the color in index 0
         color = list_colors[0].get_attribute("title")
         return color

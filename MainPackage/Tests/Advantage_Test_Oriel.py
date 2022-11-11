@@ -11,8 +11,6 @@ from MainPackage.ObjectsPages.Advantage_ProductPage import Advantage_ProductPage
 from MainPackage.ObjectsPages.Advantage_ShoppingCart import Advantage_ShoppingCart
 from MainPackage.ObjectsPages.Advantage_SignInPopUp import Advantage_SignInPopUp
 from MainPackage.ObjectsPages.Advantage_ToolBar import Advantage_ToolBar
-# delete in done
-from time import sleep
 
 
 class TestCalcPage(TestCase):
@@ -107,8 +105,9 @@ class TestCalcPage(TestCase):
 
         # add to cart products
         for i in range(len(product_index_list)):
-            # enter to product
+            # enter to category
             self.main_page.select_category(category_list[i])
+            # enter to product
             self.category_page.select_product(product_index_list[i])
 
             # add to cart
@@ -147,8 +146,64 @@ class TestCalcPage(TestCase):
         self.toolbar.click_user()
         self.account_menu.delete_account()
 
-    def test9_order_by_master_with_exist_user(self):
-        pass
+    def test9_order_by_master_with_new_user(self):
+        # create new user and logout
+        username = "test0002"
+        password = "Aabc12"
+        email = "a@gmail.com"
+        self.toolbar.click_user()
+        self.signin_page.click_create_account()
+        self.create_account_page.register(username, email, password)
+        self.toolbar.click_user()
+        self.account_menu.logout()
+
+        # lists for data to pick a products
+        category_list = ['Laptops', 'Headphones']
+        product_index_list = [3, 0]
+        qty_list = [1, 2]
+
+        # add to cart products
+        for i in range(len(product_index_list)):
+            # enter to category
+            self.main_page.select_category(category_list[i])
+            # enter to product
+            self.category_page.select_product(product_index_list[i])
+
+            # add to cart
+            self.product_page.select_quantity(qty_list[i])
+            self.product_page.add_to_cart()
+            self.toolbar.click_logo()
+
+        # navigate to checkout
+        self.toolbar.click_cart_checkout_popup()
+
+        # login to new user
+        self.order_actions.login_from_order_payment(username, password)
+
+        # pay by master card
+        self.order_actions.click_next()
+        self.order_actions.pay_now_by_master_credit("123412341234", "123", "Oriel", "02", "2023")
+        # check if the function success to locate order number element
+        self.assertTrue(self.order_actions.order_number_from_thankYou_page())
+        # save the order number from thank you page
+        order_id_from_thank_you_page = self.order_actions.order_number_from_thankYou_page()
+
+        # check if the cart empty
+        self.toolbar.click_cart()
+        self.assertTrue(self.cart_page.is_empty())
+
+        # navigate to my orders page
+        self.toolbar.click_user()
+        self.account_menu.click_my_orders()
+        # save the order number from my orders page
+        order_id_from_orders_page = self.order_actions.get_id_last_order()
+
+        # check if the order number from thank you page equal to order number from my orders page
+        self.assertEqual(order_id_from_thank_you_page, order_id_from_orders_page)
+
+        # delete new user
+        self.toolbar.click_user()
+        self.account_menu.delete_account()
 
     def test10_login_logout(self):
         username = "test0001"

@@ -5,10 +5,6 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.action_chains import ActionChains
 
-# from selenium.webdriver.chrome.service import Service
-from time import sleep
-# from Advantage_SignInPopUp import Advantage_SignInPopUp
-
 
 class Advantage_ToolBar:
     def __init__(self, _driver: webdriver.Chrome):
@@ -33,6 +29,7 @@ class Advantage_ToolBar:
 
     # click on the logo of the site and navigate to main page
     def click_logo(self):
+        # wait until the logo clickable
         self.wait.until(EC.element_to_be_clickable((By.CSS_SELECTOR, ".logo>a")))
         self.logo_element().click()
 
@@ -58,6 +55,7 @@ class Advantage_ToolBar:
     # get the list of products in cart menu popup window
     def list_products(self):
         self.hover_cart()
+        # wait the cart menu popup appear
         self.wait.until(EC.visibility_of_element_located((By.CSS_SELECTOR, "div>table")))
         table = self.driver.find_element(By.CSS_SELECTOR, "div>table")
         tr_list = table.find_elements(By.CSS_SELECTOR, "tr#product")
@@ -77,7 +75,8 @@ class Advantage_ToolBar:
         a_tag = choose_td.find_element(By.TAG_NAME, "a")
         # took from 'a' tag, h3 tag
         name = a_tag.find_element(By.TAG_NAME, "h3").text
-        # if the name above 26 letters the name change to name[0:27]
+        # if the name above 27 letterers include spaces return name with only 27 letters
+        # because in the cart menu popup the name of product can be included only 27 letters
         if len(name) > 27:
             new_name = name[:27]
             return new_name
@@ -115,6 +114,7 @@ class Advantage_ToolBar:
         # return the color
         return label_tags[1].find_element(By.TAG_NAME, "span").text
 
+    # remove product from the cart menu popup with index of the row
     def remove_product_by_index(self, index):
         # choose td from product
         choose_td = self.get_product_by_index(index)[2]
@@ -129,7 +129,7 @@ class Advantage_ToolBar:
         # click the user icon
         self.user_element().click()
         # wait for cart menu popup window not appear
-        self.wait.until_not(EC.visibility_of_element_located(((By.ID, "toolTipCart"))))
+        self.wait.until_not(EC.visibility_of_element_located((By.ID, "toolTipCart")))
 
     # return the name of user next to user icon
     def get_name_user_icon(self):
@@ -140,23 +140,3 @@ class Advantage_ToolBar:
 
         name = self.driver.find_element(By.CSS_SELECTOR, "#menuUserLink>span").text
         return name
-
-
-# === Check if the class work ===
-# Setup
-# service = Service(r"C:\seleniumQA7\chromedriver.exe")
-# driver_chrome = webdriver.Chrome(service=service)
-# driver_chrome.get("https://advantageonlineshopping.com/#/")
-# driver_chrome.implicitly_wait(30)
-# driver_chrome.maximize_window()
-# page = Advantage_ToolBar(driver_chrome)
-# sign_in_page = Advantage_SignInPopUp(driver_chrome)
-#
-# page.click_user()
-# sign_in_page.sign_in("test0001", "Aabc12")
-# print(f"len: {len(page.list_products())}")
-# page.remove_product_by_index(0)
-# print(f"len: {len(page.list_products())}")
-# sleep(5)
-
-

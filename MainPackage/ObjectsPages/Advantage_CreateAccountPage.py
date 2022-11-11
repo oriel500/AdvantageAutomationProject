@@ -11,21 +11,27 @@ class Advantage_CreateAccountPage:
         self.driver = _driver
         self.wait = WebDriverWait(self.driver, 60)
 
+    # get the username editbox element
     def username_editbox(self):
         return self.driver.find_element(By.NAME, "usernameRegisterPage")
 
+    # get the email editbox element
     def email_editbox(self):
         return self.driver.find_element(By.NAME, "emailRegisterPage")
 
+    # get the password editbox element
     def password_editbox(self):
         return self.driver.find_element(By.NAME, "passwordRegisterPage")
 
+    # get the confirm_password element
     def confirm_password_editbox(self):
         return self.driver.find_element(By.NAME, "confirm_passwordRegisterPage")
 
+    # get agree checkbox element
     def agree_checkbox(self):
         return self.driver.find_element(By.CSS_SELECTOR, "input[name='i_agree']")
 
+    # get register button element
     def register_button(self):
         return self.driver.find_element(By.ID, "register_btnundefined")
 
@@ -37,6 +43,7 @@ class Advantage_CreateAccountPage:
         self.email_editbox().send_keys(email)  # fill email
         self.password_editbox().send_keys(password)  # fill password
         self.confirm_password_editbox().send_keys(password)  # fill confirm password
+        # wait until "i_agree" checkbox clickable
         self.wait.until(EC.element_to_be_clickable((By.CSS_SELECTOR, "input[name='i_agree']")))
         # mark the "i_agree" checkbox
         self.driver.execute_script("arguments[0].click();", self.agree_checkbox())
@@ -46,19 +53,3 @@ class Advantage_CreateAccountPage:
         # wait to category in main page located
         self.wait.until(EC.visibility_of_element_located((By.ID, "our_products")))
         sleep(2.5)  # the toolbar take time to reload
-
-# === Check if the class work ===
-# Setup
-# service = Service(r"C:\seleniumQA7\chromedriver.exe")
-# driver_chrome = webdriver.Chrome(service=service)
-# driver_chrome.get("https://advantageonlineshopping.com/#/register")
-# driver_chrome.implicitly_wait(30)
-# driver_chrome.maximize_window()
-# toolbar = Advantage_ToolBar(driver_chrome)
-# toolbar1 = Advantage_ToolBar(driver_chrome)
-# page = Advantage_CreateAccountPage(driver_chrome)
-#
-# page.register("test0001", "a@gmail.com", "Aabc12")
-# sleep(20)
-
-
