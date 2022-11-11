@@ -30,7 +30,7 @@ class Advantage_MainPage:
     def select_category(self, name: str):
         d1 = {'Speakers': 'speakersImg', 'Tablets': 'tabletsImg', 'Laptops': 'laptopsImg',
               'Mice': 'miceImg', 'Headphones': 'headphonesImg'}
-        # wait to main page open
+        # wait to category in main page located
         self.wait.until(EC.visibility_of_element_located((By.ID, "our_products")))
         # click category
         self.driver.find_element(By.ID, d1[name]).click()

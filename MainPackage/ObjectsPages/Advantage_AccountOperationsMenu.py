@@ -44,7 +44,7 @@ class Advantage_AccountOperationsMenu:
         # wait until 'Are you sure' window located
         self.wait.until(EC.visibility_of_element_located((By.ID, "deleteAccountPopup")))
         self.driver.execute_script("arguments[0].click();", self.red_button())
-        # wait to main page open
+        # wait to category in main page located
         self.wait.until(EC.visibility_of_element_located((By.ID, "our_products")))
 
     def red_button(self):

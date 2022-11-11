@@ -4,6 +4,7 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.action_chains import ActionChains
+from time import sleep
 
 # from selenium.webdriver.chrome.service import Service
 # from time import sleep
@@ -44,6 +45,7 @@ class Advantage_ToolBar:
         self.actions.perform()
         # wait for cart menu popup window appear
         self.wait.until(EC.visibility_of_element_located((By.ID, "toolTipCart")))
+        sleep(2)  # the list of products in cart menu popup take time to reload
 
     # click on the cart icon in toolbar
     def click_cart(self):
@@ -124,8 +126,14 @@ class Advantage_ToolBar:
 
     # click on the user icon in toolbar
     def click_user(self):
+        # wait for user icon clickable
         self.wait.until(EC.element_to_be_clickable((By.ID, "menuUser")))
-        self.user_element().click()
+        # click the user icon
+        self.actions.move_to_element(self.user_element())
+        self.actions.click(self.user_element())
+        self.actions.perform()
+        # wait for cart menu popup window not appear
+        self.wait.until_not(EC.visibility_of_element_located(((By.ID, "toolTipCart"))))
 
     # return the name of user next to user icon
     def get_name_user_icon(self):

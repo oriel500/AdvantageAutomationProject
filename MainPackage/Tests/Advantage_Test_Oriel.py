@@ -97,7 +97,6 @@ class TestCalcPage(TestCase):
         self.toolbar.click_user()
         self.signin_page.click_create_account()
         self.create_account_page.register(username, email, password)
-        sleep(2)  # put sleep because after register the icon user take time to reload
         self.toolbar.click_user()
         self.account_menu.logout()
 

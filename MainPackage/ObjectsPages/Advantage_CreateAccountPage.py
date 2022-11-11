@@ -3,6 +3,7 @@ from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
+from time import sleep
 
 
 class Advantage_CreateAccountPage:
@@ -42,9 +43,9 @@ class Advantage_CreateAccountPage:
         # wait register button to clickable
         self.wait.until(EC.element_to_be_clickable((By.XPATH, "//*[text()='REGISTER']")))
         self.register_button().click()
-        # wait to main page open
+        # wait to category in main page located
         self.wait.until(EC.visibility_of_element_located((By.ID, "our_products")))
-
+        sleep(1.5)  # the toolbar take time to reload
 
 # === Check if the class work ===
 # Setup
