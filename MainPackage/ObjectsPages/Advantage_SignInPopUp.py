@@ -3,7 +3,7 @@ from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
-
+from time  import  sleep
 
 class Advantage_SignInPopUp:
     def __init__(self, _driver: webdriver.Chrome):
@@ -25,8 +25,13 @@ class Advantage_SignInPopUp:
 
     # Sign in from sign in popup menu
     def sign_in(self, username, password):
+        # wait fot the sign in button appear
+        self.wait.until(EC.visibility_of_element_located((By.ID, "sign_in_btnundefined")))
+
         self.username_editbox().send_keys(username)  # fill username
         self.password_editbox().send_keys(password)  # fill password
+        # selenium think that button sign in clickable and located when the site loading so i put sleep
+        sleep(3)
         # wait to button sign in clickable
         self.wait.until(EC.element_to_be_clickable((By.ID, "sign_in_btnundefined")))
         self.sign_in_button().click()

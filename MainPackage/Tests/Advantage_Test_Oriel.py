@@ -44,7 +44,7 @@ class TestCalcPage(TestCase):
         product_index_list = [0, 1, 2]
         qty_list = [3, 2, 1]
 
-        for i in range(len(product_index_list)):
+        for i in range(3):
             # enter to product
             self.main_page.select_category(category_list[i])
             self.category_page.select_product(product_index_list[i])
@@ -160,4 +160,4 @@ class TestCalcPage(TestCase):
 
         self.toolbar.click_user()
         self.account_menu.logout()
-        self.assertEqual(self.toolbar.get_name_user_icon(), "")
+        self.assertEqual(self.toolbar.get_name_user_icon(), '')

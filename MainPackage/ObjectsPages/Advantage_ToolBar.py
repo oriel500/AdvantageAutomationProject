@@ -4,10 +4,9 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.action_chains import ActionChains
-from time import sleep
 
 # from selenium.webdriver.chrome.service import Service
-# from time import sleep
+from time import sleep
 # from Advantage_SignInPopUp import Advantage_SignInPopUp
 
 
@@ -45,7 +44,6 @@ class Advantage_ToolBar:
         self.actions.perform()
         # wait for cart menu popup window appear
         self.wait.until(EC.visibility_of_element_located((By.ID, "toolTipCart")))
-        sleep(2)  # the list of products in cart menu popup take time to reload
 
     # click on the cart icon in toolbar
     def click_cart(self):
@@ -129,14 +127,17 @@ class Advantage_ToolBar:
         # wait for user icon clickable
         self.wait.until(EC.element_to_be_clickable((By.ID, "menuUser")))
         # click the user icon
-        self.actions.move_to_element(self.user_element())
-        self.actions.click(self.user_element())
-        self.actions.perform()
+        self.user_element().click()
         # wait for cart menu popup window not appear
         self.wait.until_not(EC.visibility_of_element_located(((By.ID, "toolTipCart"))))
 
     # return the name of user next to user icon
     def get_name_user_icon(self):
+        # wait for sign button not appear
+        self.wait.until_not(EC.visibility_of_element_located((By.ID, "sign_in_btnundefined")))
+        # wait for the account operation menu not appear
+        self.wait.until_not(EC.visibility_of_element_located((By.ID, "loginMiniTitle")))
+
         name = self.driver.find_element(By.CSS_SELECTOR, "#menuUserLink>span").text
         return name
 

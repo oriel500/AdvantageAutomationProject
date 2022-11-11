@@ -45,7 +45,7 @@ class Advantage_CreateAccountPage:
         self.register_button().click()
         # wait to category in main page located
         self.wait.until(EC.visibility_of_element_located((By.ID, "our_products")))
-        sleep(1.5)  # the toolbar take time to reload
+        sleep(2.5)  # the toolbar take time to reload
 
 # === Check if the class work ===
 # Setup
