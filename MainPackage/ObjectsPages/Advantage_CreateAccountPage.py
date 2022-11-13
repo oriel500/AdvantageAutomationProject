@@ -52,4 +52,4 @@ class Advantage_CreateAccountPage:
         self.register_button().click()
         # wait to category in main page located
         self.wait.until(EC.visibility_of_element_located((By.ID, "our_products")))
-        sleep(2.5)  # the toolbar take time to reload
+        sleep(2.5)  # all the elements in the toolbar take different time to reload
