@@ -38,24 +38,28 @@ class AdvantageTest(TestCase):
         self.toolbar = Advantage_ToolBar(self.driver)
 
     def test1_quantity_in_popup_cart(self):
+        # After select at least 2 products with different quantities >>
+        # >> The test will check that the correct quantity appear in the pop-up cart.
+
         # List of category names that the test will go into
         cat_list = ['Headphones', 'Mice']
-        product_index = 0  # Index of the product in the category page
-        qty = 2  # Qty of the selected product
+        product_index = 0                                        # Index of the product in the category page
+        qty = 2                                                  # Qty of the selected product
 
         # Add two different products with different qty
         for i in cat_list:
-            self.main_page.select_category(i)  # Select category by name (cat_list)
-            self.category_page.select_product(product_index)  # Select product by product index (product_index)
-            self.product_page.select_quantity(qty)  # Select quantity of product (qty)
-            self.product_page.add_to_cart()  # Add product to cart
-            self.toolbar.click_logo()  # Click Advantage logo to return to main page
+            self.main_page.select_category(i)                    # Select category by name (cat_list)
+            self.category_page.select_product(product_index)     # Select product by product index (product_index)
+            self.product_page.select_quantity(qty)               # Select quantity of product (qty)
+            self.product_page.add_to_cart()                      # Add product to cart
+            self.toolbar.click_logo()                            # Click Advantage logo to return to main page
             product_index += 1
             qty += 1
 
         # Number of products in the pop-up cart (by list)
         list_of_products_cart = self.toolbar.list_products()
         sum_qty = 0
+
         # Check the number of the qty in the list (pop-up cart)
         for i in range(len(list_of_products_cart)):
             product_qty = self.toolbar.get_qty_product_by_index(i)
@@ -99,16 +103,19 @@ class AdvantageTest(TestCase):
             self.assertEqual(price_product_page, price_toolbar)
 
     def test3_remove_product_in_popup(self):
+        # After select at least 2 products with different quantities >>
+        # >> Remove one product with the pop-up cart and test if it's disappeared
+
         # List of category names that the test will go into
         cat_list = ['Laptops', 'Mice', 'Headphones']
 
         # Add different products to cart
         for i in cat_list:
-            self.main_page.select_category(i)  # Select category by name (cat_list)
-            self.category_page.select_product(0)  # Select product by product index (product_index)
-            self.product_page.select_quantity(1)  # Quantity of the product
-            self.product_page.add_to_cart()  # Add product to cart
-            self.toolbar.click_logo()  # Click Advantage logo to return to main page
+            self.main_page.select_category(i)                   # Select category by name (cat_list)
+            self.category_page.select_product(0)                # Select product by product index (product_index)
+            self.product_page.select_quantity(1)                # Quantity of the product
+            self.product_page.add_to_cart()                     # Add product to cart
+            self.toolbar.click_logo()                           # Click Advantage logo to return to main page
 
         # Check that there is 3 products in the list
         self.assertEqual(len(self.toolbar.list_products()), 3)
@@ -124,19 +131,25 @@ class AdvantageTest(TestCase):
         self.assertEqual(len(self.toolbar.list_products()), 2)
 
     def test4_shopping_cart_page(self):
+        # After select one product and enter the shopping cart page >>
+        # The test will check if you are in the shopping cart page.
+
         self.main_page.select_category('Laptops')                        # Select category by name
         self.category_page.select_product(0)                             # Select product by index
         self.product_page.select_quantity(3)                             # Quantity of the product
         self.product_page.add_to_cart()                                  # Add product to cart
-        self.toolbar.click_cart()                                   # Go to shopping cart page
+        self.toolbar.click_cart()                                        # Go to shopping cart page
 
         self.assertEqual(self.cart_page.shopping_cart_title_element().text, 'SHOPPING CART')
 
     def test5_products_prices_sum(self):
+        # After select 3 products with different quantities and enter the shopping cart page >>
+        # The test will check if the total price equal to the price while selecting the products.
+
         # List of category names that the test will go into
         cat_list = ['Laptops', 'Speakers', 'Headphones']
-        product_index = 0                                           # Index of the product in the category page
-        qty = 1                                                     # Qty of the selected product
+        product_index = 0                                                 # Index of the product in the category page
+        qty = 1                                                           # Qty of the selected product
 
         # List of prices of the products (*qty)
         prices_list = []
@@ -158,12 +171,15 @@ class AdvantageTest(TestCase):
             prices_list.append(self.product_page.get_price()*qty)
             qty += 1
             product_index += 1
-            self.toolbar.click_logo()                               # Back to main page
+            self.toolbar.click_logo()                                    # Back to main page
 
-        self.toolbar.click_cart()                                   # Go to shopping cart page
+        self.toolbar.click_cart()                                        # Go to shopping cart page
         self.assertEqual(sum(prices_list), self.cart_page.total_price())
 
     def test6_edit_qty_of_products(self):
+        # After select at least 2 products, enter the shopping cart page and edit the quantities >>
+        # The test will check if the changes appear in the shopping cart page.
+
         # List of category names that the test will go into
         cat_list = ['Laptops', 'Mice']
 
@@ -173,9 +189,9 @@ class AdvantageTest(TestCase):
             self.category_page.select_product(0)                         # Select product by index
             self.product_page.select_quantity(1)                         # Quantity of the product
             self.product_page.add_to_cart()                              # Add product to cart
-            self.toolbar.click_logo()                               # Back to main page
+            self.toolbar.click_logo()                                    # Back to main page
 
-        self.toolbar.click_cart()                                   # Go to shopping cart page
+        self.toolbar.click_cart()                                        # Go to shopping cart page
 
         index = 0
         for z in range(2):
@@ -185,10 +201,10 @@ class AdvantageTest(TestCase):
             self.toolbar.click_cart()
             index += 1
 
-        self.toolbar.click_cart()                                   # Go to shopping cart page
+        self.toolbar.click_cart()                                        # Go to shopping cart page
         self.assertEqual((self.cart_page.product_qty_by_rowIndex(0)+self.cart_page.product_qty_by_rowIndex(1)), 4)
 
-        # There is a bug.
+        # There is a bug!
 
     # check if the text "tables" on the navigation line navigate backward to tablets category and after this
     # navigate to main page with the text "home" on the navigation line
