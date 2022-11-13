@@ -64,6 +64,7 @@ class AdvantageTest(TestCase):
         print(sum_qty)
         self.assertEqual(sum_qty, 5)
 
+    # check if the details from product equal to details from cart popup window
     def test2_products_cart_popup(self):
         category_list = ['Speakers', 'Tablets', 'Mice']
         product_index_list = [0, 1, 2]
@@ -189,6 +190,8 @@ class AdvantageTest(TestCase):
 
         # There is a bug.
 
+    # check if the text "tables" on the navigation line navigate backward to tablets category and after this
+    # navigate to main page with the text "home" on the navigation line
     def test7_check_navigate_backward(self):
         # enter to product
         self.main_page.select_category('Tablets')
@@ -206,6 +209,7 @@ class AdvantageTest(TestCase):
         # check if the function success to locate mice element
         self.assertTrue(self.main_page.mice_element())
 
+    # check if I can pay with new user by safepay method
     def test8_order_by_safepay_with_new_user(self):
         # create new user and logout
         username = "test0002"
@@ -265,6 +269,7 @@ class AdvantageTest(TestCase):
         self.toolbar.click_user()
         self.account_menu.delete_account()
 
+    # check if I can pay with new user by master credit method
     def test9_order_by_master_with_new_user(self):
         # create new user and logout
         username = "test0002"
@@ -324,14 +329,17 @@ class AdvantageTest(TestCase):
         self.toolbar.click_user()
         self.account_menu.delete_account()
 
+    # check if I can log in to user and logout
     def test10_login_logout(self):
         username = "test0001"
         password = "Aabc12"
 
         self.toolbar.click_user()
         self.signin_page.sign_in(username, password)
+        # check if the username equal to text next to user icon
         self.assertEqual(self.toolbar.get_name_user_icon(), username)
 
         self.toolbar.click_user()
         self.account_menu.logout()
+        # check if the text next to user icon is empty
         self.assertEqual(self.toolbar.get_name_user_icon(), '')
