@@ -3,14 +3,16 @@ from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
+from selenium.webdriver.common.action_chains import ActionChains
 
 
 class Advantage_AccountOperationsMenu:
     def __init__(self, _driver: webdriver.Chrome):
         self.driver = _driver
         self.wait = WebDriverWait(self.driver, 60)
+        self.actions = ActionChains(self.driver)
 
-# ===Operations in ACCOUNT OPERATIONS MENU===
+    # get the list of operations
     def get_operations(self):
         return self.driver.find_elements(By.CSS_SELECTOR, "#loginMiniTitle>label")
 
@@ -19,6 +21,7 @@ class Advantage_AccountOperationsMenu:
     # 1 = My_Orders
     # 2 = Sign out
     def click_operation(self, index):
+        # wait until the account operations menu appear
         self.wait.until(EC.element_to_be_clickable((By.ID, "loginMiniTitle")))
         self.get_operations()[index].click()
 
@@ -39,10 +42,14 @@ class Advantage_AccountOperationsMenu:
         self.click_my_account()
         # wait until my account page appear
         self.wait.until(EC.visibility_of_element_located((By.XPATH, "//*[text()='MY ACCOUNT']")))
+        # scroll down to delete button
+        self.actions.scroll_to_element(self.driver.find_element(By.XPATH, "//*[text()='Delete Account']"))
+        self.actions.perform()
         # click delete button
         self.driver.find_element(By.XPATH, "//*[text()='Delete Account']").click()
         # wait until 'Are you sure' window located
         self.wait.until(EC.visibility_of_element_located((By.ID, "deleteAccountPopup")))
+        # click yes
         self.driver.execute_script("arguments[0].click();", self.red_button())
         # wait to category in main page located
         self.wait.until(EC.visibility_of_element_located((By.ID, "our_products")))
@@ -52,21 +59,3 @@ class Advantage_AccountOperationsMenu:
 
     def green_button(self):
         return self.driver.find_element(By.CSS_SELECTOR, ".deletePopupBtn.deleteGreen")
-
-
-# === Check if the class work ===
-# Setup
-# service = Service(r"C:\seleniumQA7\chromedriver.exe")
-# driver_chrome = webdriver.Chrome(service=service)
-# driver_chrome.get("https://advantageonlineshopping.com/#/")
-# driver_chrome.implicitly_wait(30)
-# driver_chrome.maximize_window()
-# toolbar = Advantage_ToolBar(driver_chrome)
-# this_page = Advantage_AccountOperationsMenu(driver_chrome)
-# sign_in_page = Advantage_SignInPopUp(driver_chrome)
-#
-# toolbar.click_user()
-# sign_in_page.sign_in("test0001", "Aabc12")
-# toolbar.click_user()
-# this_page.delete_account()
-# sleep(10)

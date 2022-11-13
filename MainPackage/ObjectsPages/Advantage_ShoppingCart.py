@@ -4,11 +4,6 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 
-# from selenium.webdriver.chrome.service import Service
-# from time import sleep
-# from Advantage_SignInPopUp import Advantage_SignInPopUp
-# from Advantage_ToolBar import Advantage_ToolBar
-# from Advantage_AccountOperationsMenu import Advantage_AccountOperationsMenu
 
 class Advantage_ShoppingCart:
     def __init__(self, driver: webdriver.Chrome):
@@ -17,46 +12,58 @@ class Advantage_ShoppingCart:
 
     # return the title
     def shopping_cart_title_element(self):
-        return self.driver.find_element(By.LINK_TEXT, "SHOPPING CART")
+        return self.driver.find_element(By.CSS_SELECTOR, ".sp>h3")
 
     # A method that returns the shopping cart list
     def products_table(self):
+        # wait until the title of shopping cart appear
+        self.wait.until(EC.visibility_of_element_located((By.CSS_SELECTOR, ".sp>h3")))
         return self.driver.find_element(By.CSS_SELECTOR, '#shoppingCart>table>tbody')
 
+    # get the list of products in shopping cart
     def products_list(self):
         return self.products_table().find_elements(By.TAG_NAME, 'tr')
 
+    # get row in list of products by the index of the row
     def get_row_by_index(self, index):
         return self.products_list()[index]
 
+    # get the columns from row by the index of the row
     def get_columns_by_rowIndex(self, index):
         row = self.get_row_by_index(index)
         cols = row.find_elements(By.TAG_NAME, "td")
         return cols
 
+    # get the name of product by the index of the row
     def product_name_by_rowIndex(self, index):
         cols = self.get_columns_by_rowIndex(index)
         name = cols[1].find_element(By.TAG_NAME, "label").text
+        # if the name above 27 letterers include spaces return name with only 27 letters
+        # because in the cart menu popup the name of product can be included only 27 letters
         if len(name) > 27:
             new_name = name[:27]
             return new_name
         return name
 
+    # get the color of product by the index of the row
     def product_color_by_rowIndex(self, index):
         cols = self.get_columns_by_rowIndex(index)
         return cols[-3].find_element(By.TAG_NAME, "span").get_attribute("title")
 
+    # get the quantity of product by the index of the row
     def product_qty_by_rowIndex(self, index):
         cols = self.get_columns_by_rowIndex(index)
         label_list = cols[-2].find_elements(By.TAG_NAME, "label")
         return int(label_list[1].text)
 
+    # get the price of product by the index of the row
     def product_price_by_rowIndex(self, index):
         cols = self.get_columns_by_rowIndex(index)
-        price_non_space = cols[-1].find_element(By.TAG_NAME, "p").text.replace(" ","")
-        price = float(price_non_space[1:].replace(",",""))
+        price_non_space = cols[-1].find_element(By.TAG_NAME, "p").text.replace(" ", "")
+        price = float(price_non_space[1:].replace(",", ""))
         return price
 
+    # click edit from product by the index of the row
     def edit_product_by_rowIndex(self, index):
         cols = self.get_columns_by_rowIndex(index)
         span_tag = cols[-1].find_element(By.TAG_NAME, "span")
@@ -87,23 +94,3 @@ class Advantage_ShoppingCart:
         # wait until the button clickable
         self.wait.until(EC.element_to_be_clickable((By.ID, "checkOutButton")))
         self.checkout_button().click()
-
-
-# === Check if the class work ===
-# Setup
-# service = Service(r"C:\seleniumQA7\chromedriver.exe")
-# driver_chrome = webdriver.Chrome(service=service)
-# driver_chrome.get("https://advantageonlineshopping.com/#/")
-# driver_chrome.implicitly_wait(30)
-# driver_chrome.maximize_window()
-# toolbar= Advantage_ToolBar(driver_chrome)
-# sign_in_page = Advantage_SignInPopUp(driver_chrome)
-# shopping_cart_pag = Advantage_ShoppingCart(driver_chrome)
-#
-# toolbar.click_user()
-# sign_in_page.sign_in("test0001", "Aabc12")
-# toolbar.click_cart()
-# sleep(1)
-# print(shopping_cart_pag.total_price())
-# sleep(5)
-
