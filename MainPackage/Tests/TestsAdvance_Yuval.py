@@ -10,7 +10,6 @@ from MainPackage.ObjectsPages.Advantage_AccountOperationsMenu import Advantage_A
 from MainPackage.ObjectsPages.Advantage_ShoppingCart import Advantage_ShoppingCart
 from MainPackage.ObjectsPages.Advantage_CategoryPage import Advantage_CategoryPage
 from MainPackage.ObjectsPages.Advantage_SignInPopUp import Advantage_SignInPopUp
-from time import sleep
 
 
 class TestAdvantage(TestCase):
@@ -26,6 +25,7 @@ class TestAdvantage(TestCase):
         self.driver.maximize_window()
         self.driver.implicitly_wait(60)
 
+        # Initialize the objects above
         self.toolbar = Advantage_ToolBar(self.driver)
         self.main = Advantage_MainPage(self.driver)
         self.product = Advantage_ProductPage(self.driver)
@@ -37,11 +37,10 @@ class TestAdvantage(TestCase):
         self.signin = Advantage_SignInPopUp(self.driver)
 
     def test1_quantity_in_popup_cart(self):
-        # List of category names
+        # List of category names that the test will go into
         cat_list = ['Headphones', 'Mice']
-
-        product_index = 0
-        qty = 2
+        product_index = 0           # Index of the product in the category page
+        qty = 2                     # Qty of the selected product
 
         # Add two different products with different qty
         for i in cat_list:
@@ -56,6 +55,7 @@ class TestAdvantage(TestCase):
         # Number of products in the pop-up cart (by list)
         list_of_products_cart = self.toolbar.list_products()
         sum_qty = 0
+        # Check the number of the qty in the list (pop-up cart)
         for i in range(len(list_of_products_cart)):
             product_qty = self.toolbar.get_qty_product_by_index(i)
             sum_qty += product_qty
@@ -64,83 +64,93 @@ class TestAdvantage(TestCase):
         self.assertEqual(sum_qty, 5)
 
     def test3_remove_product_in_popup(self):
+        # List of category names that the test will go into
         cat_list = ['Laptops', 'Mice', 'Headphones']
-        qty = 1
 
         # Add different products to cart
         for i in cat_list:
-            self.main.select_category(i)
-            self.category.select_product(0)
-            self.product.select_quantity(qty)
-            self.product.add_to_cart()
-            self.toolbar.click_logo()
-            qty += 1
+            self.main.select_category(i)                            # Select category by name (cat_list)
+            self.category.select_product(0)                         # Select product by product index (product_index)
+            self.product.select_quantity(1)                         # Quantity of the product
+            self.product.add_to_cart()                              # Add product to cart
+            self.toolbar.click_logo()                               # Click Advantage logo to return to main page
 
+        # Check that there is 3 products in the list
+        self.assertEqual(len(self.toolbar.list_products()), 3)
         print(f'Number of products in cart is: {len(self.toolbar.list_products())}')
-        # Delete a product from pop-up
+
+        # Remove one product from pop-up list
         self.toolbar.remove_product_by_index(0)
 
-        # List of new cart list
-        self.assertNotEqual(len(self.toolbar.list_products()), 3)
+        # List of the new cart list
         print(f'Number of products in cart after remove is: {len(self.toolbar.list_products())}')
 
-    def test4_shopping_cart_page(self):
-        self.main.select_category('Laptops')
-        self.category.select_product(0)
-        self.product.select_quantity(3)
-        self.product.add_to_cart()
+        # Check that there is 2 products in the list
+        self.assertEqual(len(self.toolbar.list_products()), 2)
 
-        self.toolbar.click_cart()           # Go to shopping cart page
+    def test4_shopping_cart_page(self):
+        self.main.select_category('Laptops')                        # Select category by name
+        self.category.select_product(0)                             # Select product by index
+        self.product.select_quantity(3)                             # Quantity of the product
+        self.product.add_to_cart()                                  # Add product to cart
+        self.toolbar.click_cart()                                   # Go to shopping cart page
 
         self.assertEqual(self.cart.shopping_cart_title_element().text, 'SHOPPING CART')
 
     def test5_products_prices_sum(self):
+        # List of category names that the test will go into
+        cat_list = ['Laptops', 'Speakers', 'Headphones']
+        product_index = 0                                           # Index of the product in the category page
+        qty = 1                                                     # Qty of the selected product
+
         # List of prices of the products (*qty)
         prices_list = []
 
-        # List of names of the products
-        product_names = []
-
-        # List of qty
-        qty_list = []
-
-        cat_list = ['Laptops', 'Speakers', 'Headphones']
-        qty = 1
-        product_index = 0
-
         # Add different products with different qty to cart
         for i in cat_list:
-            self.main.select_category(i)
-            self.category.select_product(product_index)
-            self.product.select_quantity(qty)
-            self.product.add_to_cart()
-            qty_list.append(qty)
+            self.main.select_category(i)                            # Select category by name
+            self.category.select_product(product_index)             # Select product by index
+            self.product.select_quantity(qty)                       # Quantity of the product
+            self.product.add_to_cart()                              # Add product to cart
+
+            # Print details of the selected product
+            print(f'''
+            Product Name: {self.product.product_name_element()}
+            Quantity: {qty}
+            Total Product Price: {self.product.get_price()*qty}''')
+
+            # Add product price (when choosing) to relevant list
             prices_list.append(self.product.get_price()*qty)
-            product_names.append(self.category.select_product(product_index).text)
             qty += 1
             product_index += 1
-            self.toolbar.click_logo()
+            self.toolbar.click_logo()                               # Back to main page
 
-        self.toolbar.click_cart()               # Go to shopping cart page
-        print(f'Name: {product_names[0]}, Qty: {qty_list[0]}, Price: {prices_list[0]}')
-        print("----------")
-        print(f'Name: {product_names[1]}, Qty: {qty_list[1]}, Price: {prices_list[1]}')
-        print("----------")
-        print(f'Name: {product_names[2]}, Qty: {qty_list[2]}, Price: {prices_list[2]}')
-        print("----------")
-        print(f'Total price is: {sum(prices_list)}')
+        self.toolbar.click_cart()                                   # Go to shopping cart page
         self.assertEqual(sum(prices_list), self.cart.total_price())
 
     def test6_edit_qty_of_products(self):
-        cat_list = ['Laptops', 'Mice', 'Headphones']
+        # List of category names that the test will go into
+        cat_list = ['Laptops', 'Mice']
+
         # Add different products to cart
         for i in cat_list:
-            self.main.select_category(i)
-            self.category.select_product(0)
-            self.product.select_quantity(1)
-            self.product.add_to_cart()
+            self.main.select_category(i)                            # Select category by name
+            self.category.select_product(0)                         # Select product by index
+            self.product.select_quantity(1)                         # Quantity of the product
+            self.product.add_to_cart()                              # Add product to cart
+            self.toolbar.click_logo()                               # Back to main page
 
-        # self.toolbar.click_cart()
-        # edit
-        # self.product.select_quantity(qty+)
-        # AssertEqual Quantity of products to qty
+        self.toolbar.click_cart()                                   # Go to shopping cart page
+
+        index = 0
+        for z in range(2):
+            self.cart.edit_product_by_rowIndex(index)
+            self.product.select_quantity(2)
+            self.product.add_to_cart()
+            self.toolbar.click_cart()
+            index += 1
+
+        self.toolbar.click_cart()                                   # Go to shopping cart page
+        self.assertEqual((self.cart.product_qty_by_rowIndex(0)+self.cart.product_qty_by_rowIndex(1)), 4)
+
+        # There is a bug.
